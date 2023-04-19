@@ -2,8 +2,8 @@
 
 Team:
 
-* Person 1 - Which microservice?
-* Person 2 - Which microservice?
+* Person 1 - Sina Klughardt, Shoes
+* Person 2 - Michael Gianoulaskis, Hats
 
 ## Design
 
