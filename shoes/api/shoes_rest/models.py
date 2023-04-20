@@ -5,6 +5,10 @@ class BinVO(models.Model):
     bin_number = models.PositiveSmallIntegerField()
     bin_size = models.PositiveSmallIntegerField()
 
+    def __str__(self):
+        return self.closet_name
+
+
 class Shoe(models.Model):
     manufacturer = models.CharField(max_length=200)
     model_name = models.CharField(max_length=200)
@@ -15,3 +19,6 @@ class Shoe(models.Model):
         related_name="shoe",
         on_delete=models.CASCADE
     )
+
+    def __str__(self):
+        return self.model_name

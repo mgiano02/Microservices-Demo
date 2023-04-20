@@ -26,7 +26,11 @@ def poll():
             for bin in content["bins"]:
                 BinVO.objects.update_or_create(
                     closet_name=bin["closet_name"],
-                    defaults={"closet_name":bin["closet_name"]}
+                    defaults={
+                    "closet_name":bin["closet_name"],
+                    "bin_number":bin["bin_number"],
+                    "bin_size":bin["bin_size"]
+                    }
                 )
 
         except Exception as e:
