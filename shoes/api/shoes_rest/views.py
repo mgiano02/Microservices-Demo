@@ -8,11 +8,14 @@ from .models import BinVO, Shoe
 
 class ShoeListEncoder(ModelEncoder):
     model = Shoe
-    properties = ["name"]
+    properties = ["model_name"]
 
 class ShoeDetailEncoder(ModelEncoder):
     model = Shoe
-    properties = ["manufacturer", "model_name", "color", "picture", "bin"]
+    properties = ["model_name", "manufacturer", "color", "picture"]
+
+    def get_extra_data(self, o):
+        return {"bin": o.bin.bin_number}
 
 @require_http_methods(["GET", "POST"])
 def api_list_shoes(request):
@@ -26,7 +29,7 @@ def api_list_shoes(request):
     else:
         content = json.loads(request.body)
         try:
-            bin = BinVO.objects.get(bin_number=content["bin"])
+            bin = BinVO.objects.get(bin_vo_id=content["bin"])
             content["bin"] = bin
         except BinVO.DoesNotExist:
             return JsonResponse(
@@ -41,5 +44,49 @@ def api_list_shoes(request):
         )
 
 
+@require_http_methods(["DELETE", "GET", "PUT"])
+def api_show_shoe(request, pk):
+    if request.method == "GET":
+        shoe = Shoe.objects.get(id=pk)
+        return JsonResponse(
+            shoe,
+            encoder=ShoeDetailEncoder,
+            safe=False
+        )
+    elif request.method == "PUT":
+        try:
+            shoe = Shoe.objects.get(id=pk)
+        except Shoe.DoesNotExist:
+            response = JsonResponse({"message": "Shoe doesn't exist"})
+            response.status_code = 400
+            return response
+        try:
+            content = json.loads(request.body)
+            try:
+                if "bin" in content:
+                    bin = BinVO.objects.get(bin_vo_id=content["bin"])
+                    content["bin"] = bin
+            except BinVO.DoesNotExist:
+                return JsonResponse(
+                    {"message": "Invalid bin id"}
+                )
+        except json.JSONDecodeError:
+            response = JsonResponse({"message": "Bad JSON"})
+            response.status_code = 400
+            return response
 
-# Create your views here.
+        for field in content:
+            setattr(shoe, field, content[field])
+
+        shoe.save()
+
+        return JsonResponse(
+            shoe,
+            encoder=ShoeDetailEncoder,
+            safe=False
+        )
+
+
+    else:
+        count, _ = Shoe.objects.filter(id=pk).delete()
+        return JsonResponse({"deleted": count > 0})

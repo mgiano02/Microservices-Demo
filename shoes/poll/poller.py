@@ -25,8 +25,9 @@ def poll():
             print(content)
             for bin in content["bins"]:
                 BinVO.objects.update_or_create(
-                    closet_name=bin["closet_name"],
+                    bin_vo_id=bin["id"],
                     defaults={
+                    "bin_vo_id":bin["id"],
                     "closet_name":bin["closet_name"],
                     "bin_number":bin["bin_number"],
                     "bin_size":bin["bin_size"]

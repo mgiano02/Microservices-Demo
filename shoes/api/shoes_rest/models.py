@@ -4,6 +4,7 @@ class BinVO(models.Model):
     closet_name = models.CharField(max_length=100)
     bin_number = models.PositiveSmallIntegerField()
     bin_size = models.PositiveSmallIntegerField()
+    bin_vo_id = models.PositiveSmallIntegerField(unique=True)
 
     def __str__(self):
         return self.closet_name
