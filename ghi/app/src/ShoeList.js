@@ -25,10 +25,12 @@ function ShoeList(props) {
 
         if (response.ok) {
             const data = await response.json();
+            setShoes(shoes.filter((shoe) => shoe.id !== shoeId));
             return data;
           } else {
             throw new Error("Failed to delete shoe");
           }
+
         };
 
       console.log(shoes)
