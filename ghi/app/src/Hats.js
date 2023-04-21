@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import { NavLink } from "react-router-dom";
 
 function Hats(data) {
 
@@ -21,7 +22,40 @@ function Hats(data) {
         fetchData();
     }, []);
 
+    // useEffect(() => {
+    //     async () => {
+    //         await fetch("http://localhost:8090/api/hats/",
+    //         {method: "delete"})
+    //     }
+    // })
+    // const deleteHat = {
+    //     method: 'delete',
+    //     headers: {
+    //         "Content-Type": "application/json",
+    //     },
+    // }
+    // const hatUrl = "http://localhost:8090/api/hats/";
+    // fetch(hatUrl, deleteHat)
+
+    const deleteHat = async (id) => {
+        const response = await fetch(`http://localhost:8090/api/hats/${id}`, {
+            method: "delete",
+            headers: {
+                "Content-Type": "application/json",
+                },
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            return data;
+        }
+    }
+
+
     return (
+        <>
+        <NavLink className="nav-link" to="/hats/new"><button>Create</button></NavLink>
         <table className="table">
             <thead>
                 <tr>
@@ -30,6 +64,7 @@ function Hats(data) {
                     <th scope="col">Color</th>
                     <th scope="col">Picture</th>
                     <th scope="col">Location</th>
+                    <th scope="col">Delete</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,12 +76,13 @@ function Hats(data) {
                             <td>{hat.color}</td>
                             <td>{hat.picture_url}</td>
                             <td>{hat.location}</td>
-                            <button>Delete</button>
+                            <td><button onClick={() => deleteHat(hat.id)}>Delete</button></td>
                         </tr>
                         )
                     })}
             </tbody>
         </table>
+        </>
     )
 }
 
