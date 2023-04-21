@@ -8,11 +8,14 @@ from .models import BinVO, Shoe
 
 class ShoeListEncoder(ModelEncoder):
     model = Shoe
-    properties = ["model_name"]
+    properties = ["model_name", "manufacturer", "color", "picture", "id"]
+
+    def get_extra_data(self, o):
+        return {"bin": o.bin.bin_number}
 
 class ShoeDetailEncoder(ModelEncoder):
     model = Shoe
-    properties = ["model_name", "manufacturer", "color", "picture"]
+    properties = ["model_name", "manufacturer", "color", "picture", "id"]
 
     def get_extra_data(self, o):
         return {"bin": o.bin.bin_number}
