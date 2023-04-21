@@ -14,6 +14,7 @@ class LocationVOEncoder(ModelEncoder):
                   "shelf_number",
                   "import_href"]
 
+
 # Used to tell views which pieces of information to access in the hat list
 class HatListEncoder(ModelEncoder):
     model = Hat
@@ -22,11 +23,13 @@ class HatListEncoder(ModelEncoder):
         "style_name",
         "color",
         "picture_url",
-        "location"
+        "id"
     ]
-    encoders = {
-        "location": LocationVOEncoder(),
-    }
+
+    def get_extra_data(self, o):
+        return {"location": o.location.closet_name}
+
+
 
 # Used to tell views which pieces of information to access in the hat details
 class HatDetailEncoder(ModelEncoder):
