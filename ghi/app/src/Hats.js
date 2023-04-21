@@ -47,6 +47,7 @@ function Hats(data) {
 
         if (response.ok) {
             const data = await response.json();
+            setHats(hats.filter((hat) => hat.id !== id))
             console.log(data);
             return data;
         }
