@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 function ShoeList(props) {
     const [shoes, setShoes] = useState([]);
@@ -14,10 +15,27 @@ function ShoeList(props) {
         fetchData();
       }, []);
 
+      const deleteShoe = async (shoeId) => {
+        const response = await fetch(`http://localhost:8080/api/shoes/${shoeId}`, {
+        method:"DELETE",
+        headers:{
+            "Content-Type":"application/json",
+        }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+          } else {
+            throw new Error("Failed to delete shoe");
+          }
+        };
+
       console.log(shoes)
         return (
             <>
             <h1>My Shoes</h1>
+            <NavLink className="btn btn-primary" to="new/">Create new shoe</NavLink>
             <table className="table table-striped">
                 <thead>
                 <tr>
@@ -26,6 +44,7 @@ function ShoeList(props) {
                     <th>Color</th>
                     <th>Picture Url</th>
                     <th>Bin</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -37,6 +56,7 @@ function ShoeList(props) {
                         <td>{shoe.color}</td>
                         <td>{shoe.picture}</td>
                         <td>{shoe.bin}</td>
+                        <td><button onClick={() => deleteShoe(shoe.id)}>Delete</button></td>
                     </tr>
                     )
                 })}
